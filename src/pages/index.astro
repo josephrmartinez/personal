@@ -19,8 +19,8 @@ const last_posts = posts.slice(0, 3);
       <text class="text-lg">
         Software developer with experience building full-stack web applications
         and rapid prototypes. <br /><br />
-        React | tailwind | CSS | Figma | Astro | vite | Next.js | Node.js | PostgreSQL
-        | SQLite | python
+        React | Tailwind | CSS | Figma | Astro | Vite | Next.js | Node.js | PostgreSQL
+        | SQLite | Python
       </text>
     </div>
     <div class="mt-8">
@@ -66,7 +66,6 @@ const last_posts = posts.slice(0, 3);
       <>
         <HorizontalCard
           title={post.data.title}
-          img={post.data.heroImage}
           desc={post.data.description}
           url={"/blog/" + post.slug}
           target="_self"
