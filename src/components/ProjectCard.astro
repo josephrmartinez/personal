@@ -1,14 +1,5 @@
 ---
-const {
-  title,
-  github,
-  blogPost,
-  desc,
-  url,
-  badge,
-  tags,
-  target = "_blank",
-} = Astro.props;
+const { title, github, blogPost, desc, url, badge, tags } = Astro.props;
 ---
 
 <div class="rounded-lg bg-base-100">
@@ -22,7 +13,7 @@ const {
       <div class="flex flex-row items-end pt-3 ml-7">
         <a
           href={url}
-          target={target}
+          target="_blank"
           class="flex flex-row items-end mr-3 hover:text-orange-600 text-sm"
           ><svg
             width="22"
@@ -38,7 +29,7 @@ const {
         >
         <a
           href={github}
-          target={target}
+          target="_blank"
           class="flex flex-row items-end mx-6 hover:text-orange-600 text-sm"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +49,7 @@ const {
           blogPost && (
             <a
               href={blogPost}
-              target={target}
+              target="_self"
               class="flex flex-row items-end mx-6 hover:text-orange-600 text-sm"
             >
               <svg
