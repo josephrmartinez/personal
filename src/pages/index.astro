@@ -13,10 +13,12 @@ const last_posts = posts.slice(0, 3);
 
 <BaseLayout>
   <div>
-    <div class="text-3xl w-full font-bold mb-7">Joseph Martinez</div>
+    <div class="text-3xl w-full font-semibold mb-7 text-neutral-800">
+      Joseph Martinez
+    </div>
   </div>
   <div class="py-2 px-4">
-    <text class="text-lg">
+    <text class="text-lg text-neutral-800">
       Software developer with experience building full-stack web applications
       and rapid prototypes. <br /><br />
       React | Tailwind | CSS | Figma | Astro | Vite | Next.js | Node.js | PostgreSQL
@@ -24,10 +26,17 @@ const last_posts = posts.slice(0, 3);
     </text>
   </div>
   <div class="my-8">
-    <div class="btn btn-outline ml-5" id="emailbtn">grab my email address</div>
+    <div
+      class="btn btn-outline ml-5 text-neutral-800 font-medium"
+      id="emailbtn"
+    >
+      grab my email address
+    </div>
   </div>
 
-  <div class="text-3xl w-full font-bold my-2">Recent Projects</div>
+  <div class="text-3xl w-full font-semibold text-neutral-800 my-2">
+    Recent Projects
+  </div>
 
   <div class="divider my-0"></div>
   <ProjectCard
@@ -55,7 +64,9 @@ const last_posts = posts.slice(0, 3);
   />
 
   <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Recent Blog Posts</div>
+    <div class="text-3xl w-full font-semibold text-neutral-800 mb-5 mt-10">
+      Recent Blog Posts
+    </div>
   </div>
   <div class="divider my-0"></div>
 
