@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>doValues</title>
+<meta name="title" content="doValues">
+<meta name="description" content="Shifting from a project-based to a values-based mindset.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230228/">
+<meta property="og:title" content="doValues">
+<meta property="og:description" content="Shifting from a project-based to a values-based mindset.">
+<meta property="og:image" content="https://josephm.dev/social_img.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230228/">
+<meta property="twitter:title" content="doValues">
+<meta property="twitter:description" content="Shifting from a project-based to a values-based mindset.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.png">
+  <link rel="stylesheet" href="/_astro/_...page_.974825d4.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">doValues</h1>
+      <time>Feb 28, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <p><a href="https://dovalues.app/">doValues</a> is a todo list web app with a very simple premise: identify your values and then add action items under each value.</p>
+<p>This comes from curiosity about what it would look like to live less from a project-based mindset and more from a values-based mindset. I’m not saying it is necessarily more practical or productive. But I figured I’d build out the site and give it a try for a few weeks to see if this would have any impact on my outlook.</p>
+<p>I’ve built the site so that it initializes with three “starter” values: connection, health, and creativity. These can be deleted easily and replaced with values chosen by the user. These starter values suggest that three might be the optimal number of “active” values. You can add as many as you’d like, but my experience so far is that three values is the sweet spot. I can hold that many in my head with no problem and easily think of one or two todo items to add under each value each day.</p>
+<p>By clicking “add value,” the user is prompted with a drop down menu where they can select a new value from a list of about fifty. For this section, I used a “createable select” drop down input box from the <a href="https://react-select.com/creatable">React select</a> library. This is an elegant solution for a drop down list with so many items. Users can type into the the input box to narrow down the suggestions to words with matching letters or create their own value if it is not already in the list. On select and on create both trigger the same action and the selected or created value is instantly added to the users list. Pretty snappy.</p>
+<p>Nested under each value are two boxes: describe value and add do. Each value only has one description. This is optional. A user can still add items to the to do list without describing the value, butt the invitation to describe the value will just stay there. You can’t swipe it away.</p>
+<p>The describe value box was not initially there, but Kalia suggested it and I think it is a good stretch. It is one thing to pluck value words off of a list. Taking the time to actually put into your own words what it means to live out that value… this seems just inconvenient enough to be useful. No limitation on word count and the box will grow if your value description gets wordy. The default starter value suggests brevity. For connection: “spend quality time with loved ones. talk about what matters.”</p>
+<p>Then under the value description, users can add as many todo items as they would like. I felt a little cute and decided to phrase this as “add do” instead of “add todo.”</p>
+<p>And that’s pretty much it. I like the simplicity of the site. It’s a basic component-based front-end site that has some potential utility without touching a database or storing any user data. This could all be done with vanilla javascript, but since this is clearly just a simple site made up of reused components and simple state management, it does make sense to utilize React and doing so helped keep the code organized.</p>
+<p>I’ve got mixed feelings about building out the backend. A simple area for improvement would be to add two simple functions: 1. Keep a running count of which values are selected and 2. maintain a list of which value words are created by users. The list of words could be improved over time by adding user suggestions or trimming down the list to just the more common words. It could also be of some interest to know what values people are actually selecting. For the time-being, however, there is no database on the back end and all user data and interaction is totally private, just stored in local storage on a user’s device browser. This could be built out at basically no cost, but I like the front-end only nature of the site for now. Ultimately, supposedly optimizing the value selection aspect with these two functions would have minimal impact on the overall app: the real purpose is to drive users to think about how they can some up with or nest their “do” items for the day under one of their values.</p>
+<p>But does this really have any impact on living from a more values-based mindset? Give it a try and let me know what you think!</p>
+<p><a href="https://dovalues.app/">doValues site</a></p>
+<p><a href="https://github.com/josephrmartinez/dovalues">github repo</a></p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.jpg" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>
