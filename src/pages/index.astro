@@ -32,7 +32,9 @@ const last_posts = posts.slice(0, 3);
     </div>
   </div>
 
-  <div class="text-xl w-full text-neutral-800 font-semibold px-4 my-2">
+  <div
+    class="text-xl w-full text-neutral-800 font-semibold px-4 mt-12 mb-6 underline underline-offset-8"
+  >
     Recent Projects
   </div>
 
@@ -76,7 +78,9 @@ const last_posts = posts.slice(0, 3);
   </a>
 
   <div>
-    <div class="text-xl w-full text-neutral-800 font-semibold mb-5 px-4 mt-10">
+    <div
+      class="text-xl w-full text-neutral-800 font-semibold mb-5 px-4 mt-10 underline underline-offset-8"
+    >
       Recent Blog Posts
     </div>
   </div>
@@ -93,6 +97,21 @@ const last_posts = posts.slice(0, 3);
       </>
     ))
   }
+
+  <a href="/blog" class="btn btn-outline my-5 ml-4 text-gray-600">
+    All Blog Posts{" "}
+    <svg
+      class="h-6 w-6 fill-current md:h-8 md:w-8"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      {" "}
+      <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+      ></path>
+    </svg>
+  </a>
 </BaseLayout>
 
 <script>
