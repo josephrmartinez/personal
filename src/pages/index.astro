@@ -25,7 +25,7 @@ const last_posts = posts.slice(0, 3);
   </div>
   <div class="my-8">
     <div
-      class="btn btn-outline ml-5 text-neutral-800 font-medium"
+      class="btn btn-outline ml-4 text-neutral-800 font-medium"
       id="emailbtn"
     >
       grab my email address
@@ -35,7 +35,7 @@ const last_posts = posts.slice(0, 3);
   <div class="text-xl w-full text-neutral-800 font-semibold px-4 my-2">
     Recent Projects
   </div>
-  <div class="divider my-0"></div>
+
   <ProjectCard
     title="Jump to Recipe"
     desc="AI-powered recipe app with Trello integration."
@@ -43,7 +43,7 @@ const last_posts = posts.slice(0, 3);
     blogPost="https://josephm.dev/blog/20230517/"
     videoLink="https://youtube.com/shorts/HcPU1TVjiXc"
   />
-  <div class="divider my-0"></div>
+  <div class="my-2"></div>
   <ProjectCard
     title="self-empathy app"
     desc="Guides users through a self-empathy process."
@@ -52,7 +52,7 @@ const last_posts = posts.slice(0, 3);
     blogPost="https://josephm.dev/blog/20230323/"
     videoLink="https://www.youtube.com/watch?v=BwpbelruGX8"
   />
-  <div class="divider my-0"></div>
+  <div class="my-2"></div>
   <ProjectCard
     title="habitual reactions journal"
     desc="Learn about and log conversation 'defaults.'"
@@ -60,13 +60,26 @@ const last_posts = posts.slice(0, 3);
     github="https://github.com/josephrmartinez/reactionsjournal"
     blogPost="https://josephm.dev/blog/20230402/"
   />
+  <a href="/projects" class="btn btn-outline my-5 ml-4 text-gray-600">
+    All Projects{" "}
+    <svg
+      class="h-6 w-6 fill-current md:h-8 md:w-8"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      {" "}
+      <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+      ></path>
+    </svg>
+  </a>
 
   <div>
     <div class="text-xl w-full text-neutral-800 font-semibold mb-5 px-4 mt-10">
       Recent Blog Posts
     </div>
   </div>
-  <div class="divider my-0"></div>
 
   {
     last_posts.map((post) => (

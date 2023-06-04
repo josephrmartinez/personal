@@ -3,15 +3,19 @@ const { title, github, blogPost, videoLink, desc, url, badge, tags } =
   Astro.props;
 ---
 
-<div class="rounded-lg bg-base-100">
+<div class="rounded-lg">
   <div class="hero-content flex-col md:flex-row">
     <div class="grow w-full">
-      <h1 class="text-lg font-medium text-neutral-800">
+      <h1 class="text-lg font-medium text-neutral-700">
         {title}
         {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
       </h1>
-      <p class="py-1 font-normal text-neutral-600">{desc}</p>
-      <div class="flex flex-row items-end pt-3 ml-7">
+      <p
+        class="py-1 font-normal text-neutral-600 border-b-2 border-neutral-100"
+      >
+        {desc}
+      </p>
+      <div class="flex flex-row items-end pt-3">
         <a
           href={github}
           target="_blank"
