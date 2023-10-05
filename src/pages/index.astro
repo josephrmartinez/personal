@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HorizontalCard from "../components/HorizontalCard.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import ProjectIndexCard from "../components/ProjectIndexCard.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog")).sort(
@@ -37,37 +38,48 @@ const last_posts = posts.slice(0, 3);
   >
     Recent Projects
   </div>
-  <ProjectCard
+  <!-- <ProjectCard
     title="nineideas"
     desc="Minimal social network encouraging users to generate ideas every day."
     url="https://nineideas.net/"
     github="https://github.com/josephrmartinez/nineideasfrontend"
     videoLink="https://youtu.be/oy5Wy8Ah7ok"
+  /> -->
+  <ProjectIndexCard 
+    title="nineideas"
+    desc="Minimal social network encouraging users to generate ideas every day."
+    url="https://nineideas.net/"
+    github="https://github.com/josephrmartinez/nineideasfrontend"
+    videoLink="https://youtu.be/oy5Wy8Ah7ok"
+    img="public/nineideas.webp"
   />
-  <ProjectCard
+  <ProjectIndexCard
     title="CloudAtlas"
     desc="Identify cloud types with a fine-tuned machine learning model."
     url="https://cloudatlasai.netlify.app/"
     github="https://github.com/josephrmartinez/cloudatlas"
     blogPost="https://josephm.dev/blog/20230615/"
     videoLink="https://www.youtube.com/shorts/EOrtsnnEGEU"
+    img="public/nineideas.webp"
   />
   <div class="my-2"></div>
-  <ProjectCard
+  <ProjectIndexCard
     title="self-empathy app"
     desc="Guides users through a self-empathy process."
     url="https://www.selfempathy.app/"
     github="https://github.com/josephrmartinez/selfempathyapp"
     blogPost="https://josephm.dev/blog/20230323/"
     videoLink="https://www.youtube.com/watch?v=BwpbelruGX8"
+    img="public/selfempathy.webp"
   />
   <div class="my-2"></div>
-  <ProjectCard
+  <ProjectIndexCard
     title="habitual reactions journal"
     desc="Learn about and log communication antipatterns"
     url="https://josephrmartinez.github.io/reactionsjournal/"
     github="https://github.com/josephrmartinez/reactionsjournal"
     blogPost="https://josephm.dev/blog/20230402/"
+    img="public/hr.webp"
   />
   <a href="/projects" class="btn btn-outline my-5 ml-4 text-gray-600">
     All Projects{" "}
