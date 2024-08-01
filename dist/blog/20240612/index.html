@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>Impossible Day at the Recurse Center</title>
+<meta name="title" content="Impossible Day at the Recurse Center">
+<meta name="description" content="Reflections on a Day of Working Beyond the Edge of My Abilities.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20240612/">
+<meta property="og:title" content="Impossible Day at the Recurse Center">
+<meta property="og:description" content="Reflections on a Day of Working Beyond the Edge of My Abilities.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20240612/">
+<meta property="twitter:title" content="Impossible Day at the Recurse Center">
+<meta property="twitter:description" content="Reflections on a Day of Working Beyond the Edge of My Abilities.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">Impossible Day at the Recurse Center</h1>
+      <time>Jun 12, 2024</time>
+      
+      <div class="divider my-2"></div>
+      <p>Yesterday was “Impossible Day” at the <a href="https://www.recurse.com/">Recurse Center</a>. Impossible Day starts in the morning with a good number of the people currently in batch gathering in one of the conference rooms and sharing projects they would like to work on for the day. Projects can be solo, pair, or open to a group. The spirit of the day is to work on something that is beyond what you currently imagine to be even possible. To really push yourself to imagine something that feels entirely impossible and then just focus on that for the rest of the day.</p>
+<p>People went around the room sharing if they already had an idea in mind or if they are looking to join a team. Then we either paired up, joined a group, or went off to work on a solo project. We would meet again at 4pm to reflect on our progress.</p>
+<p>Impossible Day connects with but intentionally goes a bit beyond the first self-directive at the Recurse Center to “work at the edge of your abilities”. Normally, Recursers are working in that “zone of proximal development” and actually writing code on projects they find interesting. The spirit of Impossible Day is to commit to and experience working on something that is actually beyond the zone of proximal development. If you’ve been getting to know the edge of your abilities from the side of what is already possible, Impossible Day is an opportunity to see the edge of your abilities from the other side, the side you may have never actually experienced.</p>
+<p>Conceptually, I find the idea of Impossible Day to be very appealing. It is exciting to think about setting aside time to purposefully push myself meaningfully beyond what I know is already possible. I’ve noticed over the past few months as I work on a project that is in production most of my work consists of making minor, gradual improvements. I’ve grown unfamiliar with that feeling of being totally out of my depth. This makes sense. This is reasonable. Performing work ought to consist of some measurable progress, right?</p>
+<p>It would be absurd if a weight lifter went to the gym and just tried to pick up weights that were impossible to budge. But software development is not weight lifting. Unlike the athlete who is bound by the physical limitations of their muscular strength, there is always some possibility that we could have a total breakthrough or complete reorganization of our mental models when taking on a massive challenge. Yet we rarely do this. We tend to write software as though we are like the athlete who is bound by an obligation to be practical. Impossible Day is an invitation to remind us that we are very much not weight-lifters, and this is something to celebrate.</p>
+<p>Yet, this is not at all what I actually experienced during Impossible Day.</p>
+<p>I had linked up with another developer a few days prior and indicated that I was interested in working with him on his project. I didn’t overthink this. I was just happy for the opportunity to work with this developer. We paired off after the morning meeting and got to work. He explained the scope of his project and how it involved doing a bit of web scraping and then spinning up a RAG pipeline to feed this scraped content into an LLM. As we discussed the project scope, I expressed my concern that even if we were successful with the web scraping portion of this project, we would not have enough data to actually benefit from a RAG pipeline. Our total amount of data would still fit comfortably within a standard context window. I had some prior experience implementing the first steps of a RAG pipeline and this developer seemed genuinely open to my input. Within about the first half-hour of Impossible Day we had decided that we were going to pivot entirely to something else.</p>
+<p>The last aspect of his project was to work with an LLM. We talked a bit more about what was interesting to him about LLMs and settled on an idea to spin up a CLI tool called “roast my repo.” A developer could open up a terminal and simply type <code>roast_my_repo</code> and the contents of their current repo would be sent to an LLM with a prompt asking for critical feedback about whether there are any anti-patterns apparent in the project.</p>
+<p>This would be an opportunity to engage with the code review capabilities of LLMs beyond the copy-paste pattern or the line-by-line pattern. So we got to work and quickly spun up a CLI tool that recursively gathered the contents of the current working directory, sent these to an LLM, and successfully received meaningful feedback about anti-patterns on both small and very large repos.</p>
+<p>Next, we implemented a feature where users could specify that instead of just receiving narrative feedback we would like the LLM to implement the actual code changes. By specifying that we wanted these changes in structured format, we were then able to parse this response and then overwrite the actual problematic files with the code corrections from the LLM. <code>roast_my_repo --review</code> provides a comprehensive overview of anti-patterns throughout the repo. <code>roast_my_repo --fix</code> triggers a process where the updates are immediately merged into the codebase and the reasoning for the updates is provided with inline comments.</p>
+<p>We had ample time for lunch and finished the project prior to the 4pm deadline. At no point did it feel like either of us were working in the realm of the impossible. In fact, working together felt totally fluid and easy-going.</p>
+<p>During the 4pm presentations, a good number of people presenting shared that they hadn’t written one line of code. Most people were not able to accomplish even a portion of their impossible task. We were the only group that completed their task and shipped a useable product. To this extent, we were the only group that failed Impossible Day.</p>
+<p>While I’m somewhat disappointed that I didn’t get to see the edge of my abilities from the other side, I realized later that evening that something remarkable did happen. I linked up with a developer who had been holding an idea for several days. Without any defensiveness or reactivity, this developer listened to some feedback about the idea and we pivoted together to an entirely different project. We scoped the project and got to work immediately. Came up with a tone for the project, shipped the MVP feature, and then immediately got to work on a second feature that made the project far more interesting.</p>
+<p>Within the context of the Recurse Center, none of this is impossible or even exceptional. However, within the context of the typical professional environment, something like this would be drawn out, overly complicated, and never shipped. People hold on to their initial ideas for too long, feedback is taken too personally, and project scope keeps growing to the extent that what was once exciting quickly just becomes daunting or tedious.</p>
+<p>While I am in agreement with the general idea that it is worthwhile to set aside time to take on an impossible task, my honest experience is that I found it far more satisfying to work effectively with another engineer, iterate through ideas, and actually ship something useful.</p>
+<p>Still, I keep thinking about Impossible Day in relation to that scene in Fight Club where Tyler Durden gives the first homework assignment: “Pick a fight with a complete stranger and lose.” Impossible Day rolls around at the Recurse Center every six weeks. Next time, appreciating that the time at Recurse is an opportunity to step beyond your comfort zone, I’m going to see what it feels like to actually pick a fight and lose.</p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>

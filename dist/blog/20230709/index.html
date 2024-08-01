@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>Building a Customer Support Chat Bot</title>
+<meta name="title" content="Building a Customer Support Chat Bot">
+<meta name="description" content="Lessons learned and choosing not to deploy.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230709/">
+<meta property="og:title" content="Building a Customer Support Chat Bot">
+<meta property="og:description" content="Lessons learned and choosing not to deploy.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230709/">
+<meta property="twitter:title" content="Building a Customer Support Chat Bot">
+<meta property="twitter:description" content="Lessons learned and choosing not to deploy.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">Building a Customer Support Chat Bot</h1>
+      <time>Jul 9, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <p>I hate chat bots. So naturally, in a fit of self-defiance, I decided to build one. This consisted of <a href="https://platform.openai.com/docs/guides/fine-tuning">fine-tuning</a> an OpenAI model and then developing a simple UI wrapper around the resulting custom chat endpoint.</p>
+<h2 id="preparing-the-training-dataset">Preparing the Training Dataset</h2>
+<p>I’ve been running a small business for about ten years, so I started by collecting all of the customer support emails that we’ve received to date. I built a simple spreadsheet with two columns: prompt and completion. The customer’s question is in the prompt column (“Are you open on Sundays?”). The response is in the completion column (“I’m sorry, we are not open on Sundays. We are open Monday through Friday.”).</p>
+<p>In the case of extended back and forth conversations, just the very last response is in the completion column. The rest of the back and forth conversation all goes into the prompt column. This was one of the more pleasant surprises I learned while preparing the training data for the fine-tuning. You may have a situation that starts off one way but then evolves into an escalated exchange — it may seem important to capture this dynamic, and you can. You feed that entire arc of the conversation in at the “prompt” and then train the model to understand the appropriate final response as the “completion.”</p>
+<p>So I went through all of our emails and prepped this dataset. This was the most time-consuming aspect of the entire process.</p>
+<h2 id="fine-tuning-a-custom-model">Fine-Tuning a Custom Model</h2>
+<p>Once the dataset was ready, I simply saved it as a csv file, then ran two scripts in the command line. That’s it. Just two lines.</p>
+<p>This first line validates and reformats the data as a JSONL file ready for fine-tuning:</p>
+<p><code>openai tools fine_tunes.prepare_data -f &#x3C;LOCAL_FILE></code></p>
+<p>The actual fine-tuning is then initiated with this line, with the “-m davinci” flag indicating the base model (in this case, “davinci”) used for fine-tuning:</p>
+<p><code>openai api fine_tunes.create -t &#x3C;TRAIN_FILE> -m davinci</code></p>
+<p>Note that as of July 2023, the fine-tuning is not yet available on GPT3.5 or GPT4 models. So we’re working with the davinci model, which is far less dynamic and convincing when compared with the more recent models.</p>
+<p>In my case, with only a few hundred customer support emails, the actual fine-tuning process took less than ten minutes and cost about $3. The final output is simply a custom model name that you will now put in the model field when you make a request to the createCompletion endpoint:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const response = await openai.createCompletion({</span></span>
+<span class="line"><span style="color: #c9d1d9">   *** note the model value ***</span></span>
+<span class="line"><span style="color: #c9d1d9">  model: "davinci:ft-personal-custom-file-name",</span></span>
+<span class="line"><span style="color: #c9d1d9">  prompt: promptText,</span></span>
+<span class="line"><span style="color: #c9d1d9">  ...</span></span>
+<span class="line"><span style="color: #c9d1d9">  });</span></span></code></pre>
+<h2 id="first-results-and-retraining-the-model">First Results and Retraining the Model</h2>
+<p>I was surprised by how much the fine-tuned model hallucinated even on basic facts that had been included in the training data several times. The model hallucinated operating hours, where the business is located, and even made up an elaborate business origin story that has no basis in facts from the training set.</p>
+<p>Not wanting to blame this all on the fine-tuning process, I decided to perform another fine-tuning with an improved data set. I added some clear language to more often say “I do not know the answer to your question.” This did not have a major effect. I then created additional “synthetic data” by doubling the entire training set and slightly rewording the customer emails (“Where are you located?” → “What is the address?”). This gave me several hundred additional examples to train on. Still no major improvements in outcomes.</p>
+<p>I then experimented with the number of epochs to train the fine-tuning model.</p>
+<p>And I specified in the prompt for the model to simply say “I am not sure” if the model was at all uncertain of the answer. Still, despite all of this effort, the results contained too many hallucinations to be useful. The only way I could get consistent, reliable results that I would feel comfortable putting in production was by constraining the user input on the front end to toggling pre-written questions. So this becomes less of a chat interface and more of an interactive FAQ.</p>
+<p>As I developed this pitiful user interface to mitigate the poor performance of the fine-tuned model, it’s lack of genuine choice and limited granularity increasingly reminded me of another terrible user experience that has become ubiquitous on modern websites: the cookie consent banner.</p>
+<p>A generous interpretation would be that chat bots and cookie consent banners start out with good intentions but then end up becoming frustrating user experiences that are mostly ineffective. While chat bots aim to provide automated assistance and convenience, they often fall short in delivering accurate and nuanced responses. Similarly, cookie consent banners aim to protect user privacy, but their implementation often leads to consent fatigue and fails to provide users with meaningful control over their data. In both cases, the initial intentions of improving user experiences and privacy are overshadowed by the subsequent shortcomings and total disregard for users in the development of these technologies.</p>
+<h2 id="one-good-takeaway">One Good Takeaway</h2>
+<p>The vast amount of the work required to fine-tune a customer support chat bot is in the data preparation itself. This is a tedious process, but it was during this process that I came to the one good takeaway of this whole project: The vast majority of user questions were the result of poor website design.</p>
+<p>Instead of building a system to more efficiently answer these customer questions, I realized that our customers would benefit more from a website that made it so that they didn’t even need to ask these questions in the first place.</p>
+<p>If I‘m so annoyed that people are asking the same questions over and over that I build a chat bot to more efficiently provide a response, I’m missing the point entirely — nobody should need to write in and ask for our location or if we are open on Sunday. Most of the questions we were getting could have been avoided entirely with basic UX/UI improvements.</p>
+<p>I don’t regret the time spent combing through all of our customer support emails and organizing them into a cohesive dataset. It just became clear at the end of the day that building a chat bot was the wrong next step.</p>
+<p>We want websites that are intuitive and easy to navigate. Whether this is the IRS or a small business website, using customer support emails sent in due to poor website design to then deploy a fine-tuned customer support bot on top of that same website is a Kafka-esque nightmare.</p>
+<p>So what do I think when I see a chat bot pop up in the bottom corner of a company website? I think that I must be one of hundreds of customers who have struggled with basic questions about how to process a return, change an appointment, close an account, or track a package. Rather than improving the website by proactively addressing these common concerns, the mid-level managers have scooped up the customer support emails born out of poor website design and used these to fuel the deployment of a flawed chat bot on the very same website. I minimize the chat bot modal and close out the cookie consent banner.</p>
+<p>(I decided not to deploy the chat bot.)</p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>

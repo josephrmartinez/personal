@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>Building an AI recipe app</title>
+<meta name="title" content="Building an AI recipe app">
+<meta name="description" content="No more recipe stories, popup ads, and embedded videos.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230517/">
+<meta property="og:title" content="Building an AI recipe app">
+<meta property="og:description" content="No more recipe stories, popup ads, and embedded videos.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230517/">
+<meta property="twitter:title" content="Building an AI recipe app">
+<meta property="twitter:description" content="No more recipe stories, popup ads, and embedded videos.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">Building an AI recipe app</h1>
+      <time>May 17, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <p>Looking up recipes online has become predictably soul-crushing. The top results are all search engine optimized blog posts with banner ads, popup ads, email signup screens, and a video with more embedded ads. We get it, the content is free so the site owners need to monetize it somehow. But it seems like in the past few years they have gone too far. You’re relieved if the blogger has generously added a “jump to recipe” button so that you can skip over the long background story (which was only included to improve the search engine ranking).</p>
+<h3 id="jump-to-recipe">Jump to Recipe</h3>
+<p>So I built a recipe search app that uses AI to return only ingredients and instructions. No long story, no ads, just the recipe content. This app is a simple wrapper around the OpenAI API, but there is added functionality that allows users to “enhance” the recipe or create a “healthy” variation with one click. Individual ingredients can also be substituted by the AI or sent to the user’s grocery list in Trello.</p>
+<p><a href="https://youtu.be/mRghnIj_CeU">You can watch a short video demo of the app here.</a></p>
+<p>The Jump to Recipe site main page initially consists of just a simple input box and a “get recipe” button. If a user types in “fries” and hits enter, the site uses the the OpenAI API to send a completion request to the GPT-3.5 AI model. Since I’m going to use the response to then build out a webpage, I’ve indicated that I want the result to be returned as a JSON object:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const prompt = `return a recipe for ${userInput} formatted as a JSON object with the following keys: dish, ingredients, instructions`</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">openai.createChatCompletion({</span></span>
+<span class="line"><span style="color: #c9d1d9">model: "gpt-3.5-turbo",</span></span>
+<span class="line"><span style="color: #c9d1d9">messages: [{ role: "user", content: prompt }],</span></span>
+<span class="line"><span style="color: #c9d1d9">})</span></span></code></pre>
+<p>The model is pretty forgiving on how I indicate the formatting requirements; it accepts this pseudo-code method of syntactical specification. (UPDATE: OpenAI made an update to their API that allows you to received a formatted JSON response. I’ve updated the app and written about it here: <a href="https://josephm.dev/blog/20230616/">https://josephm.dev/blog/20230616/</a> The rest of this blog post is specific to how the API worked prior to the function calling updates.) Without this additional schema modeling, the AI model would return a readable response, but the format could vary slightly between responses and I wouldn’t be able to build functions to reliably access the specific values that I need in order to display the data on a webpage. It’s just much easier to work with the response if I can push the AI model into responding with JSON. The prompt above returns the following text when I set the userInput value to “fries”:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">{"dish": "fries",</span></span>
+<span class="line"><span style="color: #c9d1d9">"ingredients": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"4-5 large russet potatoes",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 cup vegetable oil",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1 teaspoon salt"</span></span>
+<span class="line"><span style="color: #c9d1d9">],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"Preheat oven to 450 degrees F (230 degrees C).",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Wash and peel potatoes, and cut into desired shape and size.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"In a large bowl, toss potatoes with vegetable oil and salt until evenly coated.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Spread potatoes in a single layer on a baking sheet.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Bake for 20-25 minutes, flipping once halfway through, or until golden brown and crispy.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Remove from oven, let cool for a few minutes, and serve hot."</span></span>
+<span class="line"><span style="color: #c9d1d9">]</span></span>
+<span class="line"><span style="color: #c9d1d9">}</span></span></code></pre>
+<p>I can then set the recipe state variable by parsing the generated text and passing it to the setRecipe setter function. Since the OpenAI chat completion model allows me to specify the schema modeling but returns the result as a JSON string, JSON.parse() function is used to convert the AI response string into a JSON object:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">.then((completion) => {</span></span>
+<span class="line"><span style="color: #c9d1d9">const generatedText =</span></span>
+<span class="line"><span style="color: #c9d1d9">completion.data.choices[0].message.content;</span></span>
+<span class="line"><span style="color: #c9d1d9">setRecipe(JSON.parse(generatedText));</span></span>
+<span class="line"><span style="color: #c9d1d9">})</span></span></code></pre>
+<h3 id="using-the-ai-to-generate-healthy-and-enhanced-variations">Using the AI to Generate Healthy and Enhanced Variations</h3>
+<p>Once the recipe loads, I’ve added some additional buttons that a user can click to request the AI generate a recipe variation. Clicking the “make healthy” button sends a stringified version of the entire recipe state variable into a new prompt and requests the AI model to return a “healthier” version, again in a specified format:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const prompt = `Rewrite this recipe to be healthier:</span></span>
+<span class="line"><span style="color: #c9d1d9">${JSON.stringify(recipe)} Format response as:</span></span>
+<span class="line"><span style="color: #c9d1d9">{"dish": ${dishName}, "ingredients": [array of strings],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions": [array of strings]}`</span></span></code></pre>
+<p>The schema modeling in this example is pretty casual, but the GPT-3.5 model does a good job of following up with a recipe variation that adheres to the JSON data structure:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">{"dish":"oven-baked fries",</span></span>
+<span class="line"><span style="color: #c9d1d9">"ingredients":[</span></span>
+<span class="line"><span style="color: #c9d1d9">"4-5 medium sweet potatoes",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1 tablespoon olive oil",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/2 teaspoon sea salt",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 teaspoon black pepper"],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions":[</span></span>
+<span class="line"><span style="color: #c9d1d9">"Preheat oven to 400 degrees F (200 degrees C).",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Wash and cut sweet potatoes into thin wedges.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"In a large bowl, toss sweet potatoes with olive oil, salt, and black pepper until evenly coated.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Spread sweet potatoes in a single layer on a baking sheet lined with parchment paper.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Bake for 20-25 minutes, flipping once halfway through, or until tender and golden brown on the outside.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Remove from oven, let cool for a few minutes, and serve hot."]}</span></span></code></pre>
+<p>Clicking the “enhance” button sends a stringified version of the entire current recipe state variable into a new prompt and requests the AI model to return an “enhanced, more flavorful” version, again in a specified format. Clicking “enhance” on the “healthy” fries returns the following response:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">{"dish": "Spicy Sweet Potato Fries",</span></span>
+<span class="line"><span style="color: #c9d1d9">"ingredients": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"4-5 medium sweet potatoes",</span></span>
+<span class="line"><span style="color: #c9d1d9">"2 tablespoons olive oil",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/2 teaspoon sea salt",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 teaspoon black pepper",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/2 teaspoon smoked paprika",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 teaspoon cayenne pepper",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 teaspoon garlic powder"],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"Preheat oven to 400 degrees F (200 degrees C).",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Wash and cut sweet potatoes into thin wedges.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"In a large bowl, whisk together olive oil, sea salt, black pepper, smoked paprika, cayenne pepper, and garlic powder.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Toss sweet potatoes with the spice mixture until evenly coated.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Spread sweet potatoes onto a baking sheet lined with parchment paper in a single layer.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Bake for 20-25 minutes, flipping once halfway through, or until tender and golden brown on the outside.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Remove from oven, let cool for a few minutes, and serve hot."] }</span></span></code></pre>
+<h3 id="iterative-prompt-development">Iterative Prompt Development</h3>
+<p>During the testing period, I realized that my prompt was not specific enough to get consistent results. On another recipe, I clicked the enhance button and received the following response:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">{"dish": "Enhanced Chicken Alfredo",</span></span>
+<span class="line"><span style="color: #c9d1d9">"ingredients": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"8 oz fettuccine pasta",</span></span>
+<span class="line"><span style="color: #c9d1d9">"2 tbsp butter",</span></span>
+<span class="line"><span style="color: #c9d1d9">"2 cloves garlic, minced",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1 lb boneless, skinless chicken breasts, cubed",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1 cup heavy cream", "1/2 cup freshly grated Parmesan cheese",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 tsp red pepper flakes",</span></span>
+<span class="line"><span style="color: #c9d1d9">"1/4 cup chopped fresh basil",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Salt and pepper to taste"],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions": [</span></span>
+<span class="line"><span style="color: #c9d1d9">"Cook pasta according to package directions. Drain and set aside.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"In a large saucepan, melt butter over medium heat. Add garlic and red pepper flakes and cook until fragrant.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Add chicken and cook until no longer pink.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Add heavy cream and Parmesan cheese and stir until cheese is melted.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Add cooked pasta to the sauce and toss to coat.",</span></span>
+<span class="line"><span style="color: #c9d1d9">"Stir in chopped basil and season with salt and pepper to taste. Serve immediately."]}</span></span>
+<span class="line"><span style="color: #c9d1d9">Enhancements:</span></span>
+<span class="line"><span style="color: #c9d1d9">- Added red pepper flakes for a bit of heat</span></span>
+<span class="line"><span style="color: #c9d1d9">- Added fresh basil for added flavor and freshness</span></span>
+<span class="line"><span style="color: #c9d1d9">- Specified to cook garlic and red pepper flakes together to infuse more flavor</span></span>
+<span class="line"><span style="color: #c9d1d9">- Changed dish name to reflect enhancements</span></span></code></pre>
+<p>In the response, the AI model provided a bullet point list of all the enhancements. This is helpful if you are just reading the recipe in a chat interface, but this additional text outside of the JSON object results in a breaking error when I try to parse the AI response:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">SyntaxError:</span></span>
+<span class="line"><span style="color: #c9d1d9">JSON.parse: unexpected non-whitespace character after JSON data at line 3 column 1 of the JSON data</span></span></code></pre>
+<p>To handle this error, I updated the prompt to be more specific. I am also specifying that I want each instruction item to be numbered:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const prompt = `Enhance this recipe to make it more interesting and flavorful:</span></span>
+<span class="line"><span style="color: #c9d1d9">${JSON.stringify(recipe)} Format response as:</span></span>
+<span class="line"><span style="color: #c9d1d9">{"dish": ${userInput}, "ingredients": ["", "", ...],</span></span>
+<span class="line"><span style="color: #c9d1d9">"instructions": ["1. ...", "2. ...", ... ]}</span></span>
+<span class="line"><span style="color: #c9d1d9">Do not include anything outside of the curly braces.`;</span></span></code></pre>
+<p>Calling this “prompt engineering” is a bit of a stretch, but at the moment this iterative prompt development is a necessary step in the development of programs that parse the response text to render components on a webpage.</p>
+<p>Still, there is a lot of room for optimizing the prompt for performance and cost efficiency. In my current program, I am tossing the entire recipe object back into the same AI model when asking for a simple ingredient substitution. I could experiment further to see if other models are more cost effective or efficient for specific needs throughout the application.</p>
+<h3 id="send-ingredient-to-grocery-list">Send Ingredient to Grocery List</h3>
+<p>In order to push this project a little bit past being just a wrapper around the OpenAI API, I implemented a feature that allows users to send ingredients to their Trello grocery list. Once a recipe is generated, the user can toggle a checkbox next to each ingredient and click “send to Trello” at the bottom of the ingredients list. A Trello card is created for each of the selected ingredients and then all of these ingredients are sent to the user’s grocery shopping list on Trello:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const createTrelloCard = async (item) => {</span></span>
+<span class="line"><span style="color: #c9d1d9">    const url = `https://api.trello.com/1/cards?key=${apiKey}&#x26;token=${apiToken}&#x26;idList=${listId}&#x26;name=${encodeURIComponent(item)}`;</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">    const response = await fetch(url, {</span></span>
+<span class="line"><span style="color: #c9d1d9">      method: 'POST',</span></span>
+<span class="line"><span style="color: #c9d1d9">    });</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">    if (response.ok) {</span></span>
+<span class="line"><span style="color: #c9d1d9">      console.log(`Created card for "${item}"`);</span></span>
+<span class="line"><span style="color: #c9d1d9">    } else {</span></span>
+<span class="line"><span style="color: #c9d1d9">      console.error(`Failed to create card for "${item}"`);</span></span>
+<span class="line"><span style="color: #c9d1d9">    }</span></span>
+<span class="line"><span style="color: #c9d1d9">  };</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">  const createCardsOnTrelloBoard = async () => {</span></span>
+<span class="line"><span style="color: #c9d1d9">    for (const item of items) {</span></span>
+<span class="line"><span style="color: #c9d1d9">      await createTrelloCard(item);</span></span>
+<span class="line"><span style="color: #c9d1d9">    }</span></span>
+<span class="line"><span style="color: #c9d1d9">  };</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">  createCardsOnTrelloBoard();</span></span>
+<span class="line"><span style="color: #c9d1d9">}</span></span></code></pre>
+<h3 id="best-recipe-app">Best Recipe App?</h3>
+<p>Simply looking up recipes with ChatGPT is already fairly straightforward and seamless. The response time is almost immediate, the cost is zero, and any revisions can be done through simple follow-up commands. To that end, Jump to Recipe is perhaps only a slight improvement over just using ChatGPT. Like many of the AI products that have surfaced in the last few months, this is simply a “wrapper” with some added functionality like saving a recipe and integrating with another app (in this case, sending specific ingredients to my personal grocery list on Trello).</p>
+<p>The major downsides with Jump to Recipe are the response times and the cost. My experience is that it took an average of 15 seconds for OpenAI to respond to API requests. ChatGPT provides the response immediately, the user just needs to sit through the word by word loading. Looking up the recipe on ChatGPT is free, for now at least. Hitting the API with these requests and revisions, however, does have a cost. These are the token costs for an apple pie query:</p>
+<p>Getting initial recipe: 271 tokens<br>
+Enhancing recipe: 587 tokens<br>
+Substituting ingredient: 615 tokens<br>
+Make healthy variation: 588 tokens<br>
+<strong>Total: 2,061 tokens</strong></p>
+<p>OpenAI API pricing: $0.002/1k tokens<br>
+<strong>Total cost: $0.00412</strong></p>
+<p>The major improvements here are the single click revisions and the Trello functionality. I think this is the key with wrapper apps: you need to bring in another API if possible and significantly vary the user experience in a way that allows them to interface with the AI chat beyond the chat format. In this case, the user only needs to type the recipe name. All further interaction consists of simply selecting and clicking. The prompts have been optimized to run off of these click events and the AI seems to just rewrite the relevant components on the page.</p>
+<p>Response time is a bit of an issue at the moment and the app is not totally free to operate, but I do love the simple interface the the ability to revise the recipes on the fly and then send the ingredients to my shopping list. At least I’m no longer skimming through those long stories when I look up a recipe.</p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>

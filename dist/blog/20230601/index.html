@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>AI Travel Itinerary App</title>
+<meta name="title" content="AI Travel Itinerary App">
+<meta name="description" content="Visual AI Interfaces, Prompt Engineering for Brand Placement.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230601/">
+<meta property="og:title" content="AI Travel Itinerary App">
+<meta property="og:description" content="Visual AI Interfaces, Prompt Engineering for Brand Placement.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230601/">
+<meta property="twitter:title" content="AI Travel Itinerary App">
+<meta property="twitter:description" content="Visual AI Interfaces, Prompt Engineering for Brand Placement.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">AI Travel Itinerary App</h1>
+      <time>Jun 1, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <h3 id="travel-itinerary-ai-app">Travel Itinerary AI app</h3>
+<p>I had so much fun developing a simple <a href="https://josephm.dev/blog/20230517/">AI-powered recipe app</a> that I wanted to spin up another app that would similarly use AI to expedite a normally soul-crushing process: vacation planning.</p>
+<p>Perhaps other people have a method down, but my approach to vacation planning is to research in a bunch of different directions over the course of a few weeks and just hope that something emerges. There are a dozens of tabs open in my browser. I’m looking at Google flights, reading articles and blog posts, reaching out to see if friends are going to be in the area… there is no real strategy.</p>
+<p>So I put together a simple user interface that allows a user to indicate their travel preferences, select “generate trip,” and then get an interactive travel itinerary based on their input. <a href="https://youtu.be/4Cx8QBDA0_A">Click here to view a quick one-minute demo video of the site.</a></p>
+<p>It is absolutely possible for someone to just type their travel preferences into ChatGPT and get a decent travel itinerary in response. But creating a “wrapper” app like this presents two opportunities that were fun to explore:</p>
+<ol>
+<li>Instead of just typing into a box, a series of selectable icons allow for a quicker and more visual way for users to interact with the AI model.</li>
+<li>It becomes possible to embed specific brand or company preferences in the prompt on the back end.</li>
+</ol>
+<h3 id="creating-delightful-and-fail-safe-user-interfaces-for-ai-models">Creating Delightful and Fail-Safe User Interfaces for AI Models</h3>
+<p>Typing out a detailed request for a travel itinerary into the ChatGPT interface took me about 1 minute and 15 seconds on desktop. A bit longer on mobile. Using this graphical interface, I was able to enter in all of my travel itinerary preferences on both mobile and desktop in about 20 seconds. It was a much more enjoyable experience. So there is a degree of time savings, but there is also just a general fatigue I have with the chat box interface. I’m really keen on other, more visual methods of sending in form data.</p>
+<p>The site uses a date range selector calendar widget to enter the start and end dates for the trip and then a text input box for the user to indicate a region preference. Everything else is just a series of icons that the user can simply click to toggle. Environment, group size, accommodation preferences, pace, and interests. For the moment, the site is fairly minimalist, I’m mostly just relying on the <a href="https://phosphoricons.com/">Phosphor Icons</a> to do the heavy lifting. Finding a good icon library can be tricky. I was recently on a call with <a href="https://noon.fyi/">Paul Noonan</a> and I think he used the perfect word to describe these icons: delightful. They really are! Typing into a large text input area or filling out a series of small text fields feels tedious and dull. But there is something just… delightful about toggling these icons to provide preference input.</p>
+<p>Cutting down on totally open text input fields also allows developers to build tools that are less likely to fail with bad user input. Currently, every input field except for “region preference” is essentially a multiple choice question. This reduces the ability for a user to inject off topic or malicious input. The input options are constrained so that the results will always return a useful and on-topic response. This open “region preference” text input could use some further consideration. (For a moment, I swapped out the text input field with a map widget, but the pin drop approach ended up taking too long.) So users can enter random input in this box that will sometimes result in the response object failing. Though, during testing I noticed that the AI model tends to force a trip itinerary even if the regional input is totally off. The prompt (shown below) is tight enough that bad data input here does not derail the whole response object. When I submitted “Tom Hanks” as my regional preference, I got a travel itinerary that spanned from Kauai to the Fiji Islands. Perhaps a reference to Cast Away?</p>
+<h3 id="brand-placement-through-prompt-engineering">Brand Placement Through Prompt Engineering</h3>
+<p>While spinning up these AI apps can be a lot of fun, I’ve started wondering about how these products can and will be commercialized. A simple wrapper app like this opens up the possibility to inject a specific brand, sponsor, or piece of information into the response object. This is a logical extension of the sponsored search result. But I think these AI models can open up possibilities for this to be even more specific.</p>
+<p>This is the current prompt that the site is using:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">const prompt=`Create an extraordinary travel itinerary based on the following information ${JSON.stringify(travelData)}.</span></span>
+<span class="line"><span style="color: #c9d1d9">Be as specific as possible with accommodation, activity suggestions, and travel connections between the trip segments.</span></span>
+<span class="line"><span style="color: #c9d1d9">Ensure that the itinerary includes some off-the-beaten-path suggestions and that the activity recommendations take the provided interests into account.</span></span>
+<span class="line"><span style="color: #c9d1d9">Return your response in JSON format with the key trip_segments containing an array of trip segments.</span></span>
+<span class="line"><span style="color: #c9d1d9">Each trip segment should include the following keys:</span></span>
+<span class="line"><span style="color: #c9d1d9">'start_date' (string): The starting date of the trip segment.</span></span>
+<span class="line"><span style="color: #c9d1d9">'end_date' (string): The ending date of the trip segment.</span></span>
+<span class="line"><span style="color: #c9d1d9">'location' (string): The location or destination of the trip segment.</span></span>
+<span class="line"><span style="color: #c9d1d9">'travel_logistics' (string): Information related to travel logistics, such as transportation options or specific instructions.</span></span>
+<span class="line"><span style="color: #c9d1d9">'accommodation_details' (string): Details about the accommodation for the trip segment, including hotel names, addresses, or booking information.</span></span>
+<span class="line"><span style="color: #c9d1d9">'activities' (array of strings): An array containing multiple strings representing detailed activity suggestions for the trip segment. Each activity is a separate item in the array.</span></span>
+<span class="line"><span style="color: #c9d1d9">Your entire response should be in JSON format, nothing else.`</span></span></code></pre>
+<p>But let’s say a company like Marriott would like to play in this space. We can add just the following line to the prompt:</p>
+<p>“If the accommodation type is hotel or resort, suggest a Marriott brand property if there is one in the area.”</p>
+<p>When I ran the prompt for a trip to Portland without this “branded” suggestion, I got a mix of Hilton and independent hotel suggestions. They were totally fine. Then I ran the updated prompt and received real hotel suggestions that are actually operated by Marriott.</p>
+<p>This could get even more granular. We can update the prompt to suggest a specific restaurant if a user indicates a culinary interest and is travelling near that particular city. Or we can tell the AI to suggest a particular Marriott brand if the user selects certain interests. For example, if the user selects an interest in relaxation, provide accomodation suggestions from properties that include a spa.</p>
+<p>At that point, however, it would make sense to develop a middleware function that takes in the user input and then injects the relevant sponsored content suggestions only when certain conditions are met. There is no need to pass in one massive prompt with all of these possible conditions. We can use the baseline prompt as shown above and then optionally add in additional variables as we did with the ‘travelData’ when the conditions are right for making these sponsored suggestions.</p>
+<h3 id="further-development---creative-solutions-to-api-response-time-and-cost">Further Development - Creative Solutions to API Response Time and Cost</h3>
+<p>The major issue with this and similar apps it the response time. It currently takes about 20 to 35 seconds to receive a response from the OpenAI API. That is infinitely quicker than planning a vacation itinerary without this tool, and the visual interface is already about a minute quicker than typing out my itinerary request into ChatGPT, but the wait time still feels like a deal breaker.</p>
+<p>One way to mitigate this issue could be to display a video or slideshow of relevant content while the user waits for an itinerary. Content selection could be determined by the user input so that it is somewhat topically relevant. I’d probably be more willing to wait twenty seconds if there is some sort of visual response other than a spinning wheel.
+Another option would be to hit the OpenAI API with another request, but this time set the “stream” parameter to true in the request body in order to <a href="https://platform.openai.com/docs/api-reference/completions/">stream back partial progress</a>. The response would end up looking similar to the ChatGPT interface with the text loading word by word. This would not work for the interactive itinerary object itself in this app, but the site could be updated to initially load some bulk text content while waiting for the itinerary request to complete.</p>
+<p>This is just a starting point for an itinerary app. It’s functional enough at this point to be useful. But this is still just another site that ends up costing money to run based on OpenAI API usage. So without some sort of monetization program in place, there is no real incentive to make these tools openly available.</p>
+<p>There was a recent <a href="https://news.ycombinator.com/item?id=36100808">discussion on HackerNews</a> where a developer reached out asking for advice on how to handle the runaway costs for a personal project that had become an overnight success. The site is basically a chatbot built on top of ChatGPT with a custom prompt that includes local references and instructions on how to communicate in the local dialect. It became a big hit in the local area, but the API usage alone was costing him about $50 per day. Without a monetization plan in place, he was going to have to shut the site down. He posted on HackerNews asking for advice on how to keep the site running.</p>
+<p>From a developer’s perspective, the most straightforward solution is to just ask users to plug in their own OpenAI API key while they use the product. But this isn’t practical for a general audience. The HackerNews discussion covers a range of other possible solutions that could be interesting to people building products in this space.</p>
+<p>I’m going to keep building on this project. Reach out if you have any suggestions or would like to give it a try!</p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>

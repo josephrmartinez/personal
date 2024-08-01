@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>CloudAtlas</title>
+<meta name="title" content="CloudAtlas">
+<meta name="description" content="Fine tune a machine learning model to identify cloud types.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230615/">
+<meta property="og:title" content="CloudAtlas">
+<meta property="og:description" content="Fine tune a machine learning model to identify cloud types.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230615/">
+<meta property="twitter:title" content="CloudAtlas">
+<meta property="twitter:description" content="Fine tune a machine learning model to identify cloud types.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">CloudAtlas</h1>
+      <time>Jun 15, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <p><a href="https://cloudatlasai.netlify.app/">CloudAtlas</a> is a web app built on a machine learning object detection model that I have fine-tuned to help users identify cloud types.</p>
+<p>A user uploads a photo (either from their mobile phone camera or from an image stored on their device) and then when they click “submit”, the image is sent to a computer vision model that I have fine-tuned to recognize cloud types. The model takes a few seconds to analyze the image and then returns a percentage that indicates the confidence that the image is of a certain cloud type.</p>
+<p>The core of this app is an image classification neural network that I’ve fine tuned to distinguish between ten different cloud types. Fine tuning is a transfer learning technique where the parameters of a pretrained model are updated by additional rounds (epochs) of training on a new set of data for our specific use case. We start with a pre-trained general purpose model that can already recognize basic shapes and objects. Then the model is fine-tuned until it achieves an acceptable ability to identify, in this case, a “cumulonimbus cloud” from an image uploaded by a user.</p>
+<h3 id="steps-to-train-and-deploy-the-model">Steps to Train and Deploy the Model</h3>
+<p>Training an AI to recognize cloud types involves a process known as supervised learning, where you provide the AI with a labeled dataset of cloud images along with their corresponding cloud types. These are the general steps to train an AI for cloud type recognition:</p>
+<p><strong>Data collection:</strong> Gather a large dataset of cloud images with accurate labels indicating the corresponding cloud types.</p>
+<p><strong>Data preprocessing:</strong> Clean and preprocess the dataset by resizing the images to a consistent size, normalizing the pixel values, and splitting the data into training and testing sets. It’s important to have a balanced representation of each cloud type in your dataset to avoid bias during training.</p>
+<p><strong>Model selection:</strong> Choose an appropriate machine learning model for image recognition tasks. Convolutional Neural Networks (CNNs) are commonly used for image classification tasks due to their ability to learn spatial patterns. In this case, I started with a pre-trained ResNet18 model, which has already been trained on large-scale image datasets and is a fairly quick CNN.</p>
+<p><strong>Model training:</strong> Train the model using the labeled cloud image dataset. During training, the model learns to extract features from the images and map them to the corresponding cloud types. This process involves feeding the training data through the network, calculating the loss, and updating the model’s parameters through backpropagation and optimization algorithms (e.g., gradient descent).</p>
+<p><strong>Model evaluation:</strong> Evaluate the trained model using the testing dataset to assess its performance. Metrics such as accuracy, precision, recall, and F1 score can be used to measure the model’s effectiveness in recognizing different cloud types.</p>
+<p><strong>Model refinement:</strong> If the model’s performance is not satisfactory, you can refine it by adjusting hyperparameters, modifying the network architecture, or increasing the size and diversity of the training dataset. Iterative refinement is often necessary to improve the model’s accuracy.</p>
+<p><strong>Deployment and inference:</strong> Once you have a trained model with satisfactory performance, you can deploy it to make predictions on new, unseen cloud images. The AI model takes an input image and outputs the predicted cloud type based on its learned knowledge.</p>
+<h3 id="training-and-deploying-a-model-with-the-fastai-library">Training and Deploying a Model With the fast.ai Library</h3>
+<p>The <a href="https://github.com/fastai/fastai">fast.ai</a> deep learning library can be used to facilitate this entire training the deployment process. We start by opening up a juptyper notebook and importing the fast.ai library:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">pip install -Uqq fastbook</span></span>
+<span class="line"><span style="color: #c9d1d9">import fastbook</span></span>
+<span class="line"><span style="color: #c9d1d9">fastbook.setup_book()</span></span>
+<span class="line"><span style="color: #c9d1d9">from fastbook import *</span></span>
+<span class="line"><span style="color: #c9d1d9">from fastai.vision.widgets import *</span></span></code></pre>
+<p><strong>Data Collection: Gather and Label Data</strong></p>
+<p>Now we create a list of cloud types we are going to identify. Make a folder for each of these cloud types. Run an image search on Duck Duck Go for 100 each of these cloud types and put the images in their respective folder. Since we are gathering images from an online search, there are likely to be corrupt files. Identify these failed images with verify_images() and then remove these files by running unLink on each of them:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">cloud_types = 'cirrus', 'cirrocumulus', 'cirrostratus', 'altocumulus',</span></span>
+<span class="line"><span style="color: #c9d1d9">'altostratus', 'nimbostratus', 'stratocumulus', 'stratus', 'cumulus',</span></span>
+<span class="line"><span style="color: #c9d1d9">'cumulonimbus'</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">path = Path('clouds')</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">if not path.exists():</span></span>
+<span class="line"><span style="color: #c9d1d9">    path.mkdir()</span></span>
+<span class="line"><span style="color: #c9d1d9">    for o in cloud_types:</span></span>
+<span class="line"><span style="color: #c9d1d9">        dest = (path/o)</span></span>
+<span class="line"><span style="color: #c9d1d9">        dest.mkdir(exist_ok=True)</span></span>
+<span class="line"><span style="color: #c9d1d9">        results = search_images_ddg(f'{o} clouds', 100)</span></span>
+<span class="line"><span style="color: #c9d1d9">        download_images(dest, urls=results)</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">fns = get_image_files(path)</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">failed = verify_images(fns)</span></span>
+<span class="line"><span style="color: #c9d1d9">failed.map(Path.unlink);</span></span></code></pre>
+<p><strong>Data Preprocessing: Organize Data for Model Training</strong></p>
+<p>Now that we have the data downloaded and sorted into folders, we need to organize it in a format suitable for model training. The fast.ai library includes a DataBlock object and dataloaders function that makes this incredibly straightforward:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">clouds = DataBlock(</span></span>
+<span class="line"><span style="color: #c9d1d9">    blocks=(ImageBlock, CategoryBlock),</span></span>
+<span class="line"><span style="color: #c9d1d9">    get_items=get_image_files,</span></span>
+<span class="line"><span style="color: #c9d1d9">    splitter=RandomSplitter(valid_pct=0.2, seed=42),</span></span>
+<span class="line"><span style="color: #c9d1d9">    get_y=parent_label,</span></span>
+<span class="line"><span style="color: #c9d1d9">    item_tfms=Resize(128))</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">dls = clouds.dataloaders(path)</span></span></code></pre>
+<p>In the block argument of the DataBlock object we provide a tuple where we set the cloud images as the independent variable and the cloud type labels as the dependent variable. The RandomSplitter function sets aside twenty percent of the images for a validation set. parent_label is a fastai function that simply returns the name of the folder that a file is in. Since we put each of our cloud images into a folder with the name of the cloud type, this provides the labels for our items. Finally, we apply a transformation on each item with the Resize function so that each of the images are the exact same size.</p>
+<p>The DataBlock is like a template for creating a dataloader object. We create a dataloaders object (dls) by then passing the actual path to our data (and labels).</p>
+<p><strong>Model Selection and Training</strong></p>
+<p>For this project, we are going to use the ResNet18 Convolutional Neural Network. Using the fastai library, we can simply specify resnet18 as as argument on a vision_learner function.</p>
+<p>We first create a vision_learner object with the dataloader (dls) and model (resnet18). Then call the fine_tune function on the vision_learner object to specify the number of epochs (training cycles) we want to run on the model. More is not always better. At a certain point, you may run into overfitting your model. In this case, I just ran four epochs:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">learn = vision_learner(dls, resnet18, metrics=error_rate)</span></span>
+<span class="line"><span style="color: #c9d1d9">learn.fine_tune(4)</span></span></code></pre>
+<p><strong>Model Evaluation and Refinement: Confusion Matrix and ImageClassifierCleaner</strong></p>
+<p>The fast.ai library includes a confusion maxtrix module that provides a visual way to evaluate how the model is performing. Simply running these two lines of code pops out a graphic representation of how well the model did with the predictions:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">interp = ClassificationInterpretation.from_learner(learn)</span></span>
+<span class="line"><span style="color: #c9d1d9">interp.plot_confusion_matrix()</span></span></code></pre>
+<p>After the first time I ran the model, I got this output:</p>
+<p><img src="/confusionmatrixv1.png" alt="confusionmatrixv1"></p>
+<p>If the model was perfect, we would see a dark blue diagonal line. This model has some room for improvement. We can see that there were 14 times when the model predicted a cirrocumulus cloud when it was actually an altocumulus cloud.</p>
+<p>fast.ai includes a handy graphic user interface tool called an ImageClassifierCleaner that allows me to pull out or recategorizee problematic data:</p>
+<p>cleaner = ImageClassifierCleaner(learn)
+cleaner</p>
+<p>When I run the ImageClassifierCleaner, it becomes apparent that many of my images are poorly labeled - in both the training and validation sets. In this case, I collected images from a DuckDuckGo image search. These are user-uploaded images that are prone to mislabeling. A more robust strategy would be to collect data from a scientific database such as the <a href="https://cloudatlas.wmo.int/en/search-image-gallery.html">World Meteorological Organization International Cloud Atlas</a>.</p>
+<p>Running the ImageClassifierCleaner does not fine-tune the model. It simply returns the most inaccurate predictions and allows you to change the labels on images (moves them into a different folder) or remove them entirely. Something counter-intuitive that Jeremy Howard suggests in the fast.ai Practical AI course is to actually fine-tune the model <strong>before</strong> attempting to sort through all the images and make sure they are correctly labeled. Since the ImageClassifierCleaner returns the most inaccurate predictions first, we can use this process to efficiently extract just the data the is most likely in need of our attention.</p>
+<p>Once I am satisfied with the ImageClassifierCleaner process, I can run <code>learn.fine_tune(4)</code> to fine-tune the model again.</p>
+<p>This is what my confusion matrix looked like after the second fine-tuning:</p>
+<p><img src="/confusionmatrixv2.png" alt="confusionmatrixv2"></p>
+<p>You will notice that some type predictions improved, but some others actually did worse. Now I can focus on those areas and see if there are mistakes I actually introduced during the data cleaning. Fastai makes it very simple to just keep repeating this process until I get to an acceptable result. Since we’re running a cloud detection model and not a cancer detection model, a degree of inaccuracy is acceptable. Additionally, it is likely that some images include multiple types of clouds in the same frame. So in this case it is actually totally fine for the output to be a cloud type prediction that is split between multiple types — there may in fact be multiple types of clouds in the frame!</p>
+<p><strong>Deployment and Inference</strong>
+Once I am satisfied with the accuracy of my model, I can export it simply by running:</p>
+<p><code>learn.export()</code></p>
+<p>The output of this whole model fine-tuning process is just a 45mb <a href="https://docs.python.org/3/library/pickle.html">.pkl</a> file. That’s it.</p>
+<p>In order to do the model training / fine-tuning, I used a GPU accessed through Colab. But then to use this model in production, I can simply run it off a consumer grade CPU or upload the model online. HuggingFace is an online community that provides a very simple platform for sharing these models with a straightforward user interface.</p>
+<p>I simply create a ‘space’ on HuggingFace and string together a simple app.py script that sets up a Gradio user interface where users can upload images of clouds, connects to the pre-trained Fastai model that classifies the images into one of the predefined cloud categories, and then displays the predicted label onto the interface:</p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">import gradio as gr</span></span>
+<span class="line"><span style="color: #c9d1d9">from fastai.vision.all import *</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">learn = load_learner('export.pkl')</span></span>
+<span class="line"><span style="color: #c9d1d9">categories = ('altocumulus', 'altostratus', 'cirrocumulus', 'cirrostratus',</span></span>
+<span class="line"><span style="color: #c9d1d9">'cirrus', 'cumulonimbus', 'cumulus', 'nimbostratus', 'stratocumulus', 'stratus')</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">def classifier(img):</span></span>
+<span class="line"><span style="color: #c9d1d9">    pred, idx, prob = learn.predict(img)</span></span>
+<span class="line"><span style="color: #c9d1d9">    return dict(zip(categories, map(float, prob)))</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">image = gr.inputs.Image(shape = (192, 192))</span></span>
+<span class="line"><span style="color: #c9d1d9">label = gr.outputs.Label()</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">iface = gr.Interface(fn=classifier, inputs=image, outputs=label)</span></span>
+<span class="line"><span style="color: #c9d1d9">iface.launch(inline = False)</span></span></code></pre>
+<p>This allows me to deploy and share the app on <a href="https://huggingface.co/spaces/josephmdev/cloudatlas">HuggingFace</a> without needing to code up a front-end UI at all. However, the Gradio client on HuggingFace also creates an API so that I can build a UI wrapper around this model. I took that route as well and deployed the <a href="https://cloudatlasai.netlify.app/">CloudAtlas</a> site to Netlify.</p>
+<h3 id="areas-for-further-improvement">Areas for Further Improvement</h3>
+<p>Going forward, I could fine tune the model further by continuing to run the ImageClassifierCleaner to remove or relabel training and validation data. I could also turn to a more authoratative source to incorporate better quality data.</p>
+<p>I could also improve the training by using different model architectures. This model was trained on ResNet-18, but there are numerous other CNN models that I could try. ResNet-18 is just a good starting model because it is quick - it only takes a few minutes to fine-tune. Through the process of fine-tuning the model, I may fine that there are some types of clouds that are difficult to categorize and there are certain models that are better suited to making these distinctions. On the other hand, this is just a cloud recognition app and the level of accuracy achieved with just the ResNet-18 model may be totally sufficient.</p>
+<p>The most obvious area for improvement is in error handling. Currently, it does not matter if a user uploads an image that is not of a cloud at all. In fact, if you upload one of those confusion matrix images above, the model will guess that it is a cirrostratus cloud. Given the color pallet, this is not a terrible guess… but still, the model should have some way of running error handling to determine first whether an object is even a cloud at all.</p>
+<p>Looking further out, it could be interesting to develop a UI that can be deployed in a spatial computing environment. Instead of using a web interface to upload cloud images, users could access the model API through an augmented reality environment where they would simply look at the cloud and ask for the cloud type.</p>
+<h3 id="takeaways">Takeaways</h3>
+<p>My experience with this project has given me two valuable insights:</p>
+<ol>
+<li>
+<p>Fine-tuning an image classification model doesn’t demand extensive computational resources, time, or massive amounts of data. However, it is crucial to involve someone with domain expertise who can supervise the selection of appropriate labels for the training and validation datasets. Their guidance ensures the model’s accuracy and relevance.</p>
+</li>
+<li>
+<p>The deployment of the model is remarkably straightforward. Once fine-tuned, the model becomes a convenient .pkl file that can be easily deployed using platforms like HuggingFace with a simple Python script. Moreover, accessing the model through an API simplifies the process of developing a user interface (UI) wrapper with additional functionalities and structured output.</p>
+</li>
+</ol>
+<p>The fast.ai library streamlines the fine-tuning and deployment of image classification models and makes it possible to leverage the power of machine learning in a variety of applications with relative ease.</p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>

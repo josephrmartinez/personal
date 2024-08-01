@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>Building a self-empathy app</title>
+<meta name="title" content="Building a self-empathy app">
+<meta name="description" content="A web application to support self-connection and self-awareness.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20230323/">
+<meta property="og:title" content="Building a self-empathy app">
+<meta property="og:description" content="A web application to support self-connection and self-awareness.">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20230323/">
+<meta property="twitter:title" content="Building a self-empathy app">
+<meta property="twitter:description" content="A web application to support self-connection and self-awareness.">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">Building a self-empathy app</h1>
+      <time>Mar 23, 2023</time>
+      
+      <div class="divider my-2"></div>
+      <p>The idea for building a <a href="https://selfempathy.app/">self-empathy app</a> app came up years ago when I was first starting to give workshops on Nonviolent Communication.</p>
+<p>Nonviolent Communication (NVC) is a communication approach developed by psychologist Marshall Rosenberg. The purpose of NVC is to create connections and resolve conflicts between people by focusing on expressing ourselves in a way that is honest, clear, and compassionate, while also listening to others with empathy and understanding.</p>
+<p>The NVC framework involves four main components:</p>
+<ol>
+<li>
+<p>Observation: Describing what we observe, without adding any interpretation or evaluation.</p>
+</li>
+<li>
+<p>Feelings: Identifying and expressing how we feel about what we observe, without blaming or accusing others.</p>
+</li>
+<li>
+<p>Needs: Identifying and expressing the underlying needs or values that are driving our feelings, without making demands or ultimatums.</p>
+</li>
+<li>
+<p>Requests: Making clear requests for specific actions that could meet our needs, without using language that is coercive or threatening.</p>
+</li>
+</ol>
+<p>NVC emphasizes the importance of active listening, empathy, and understanding the needs and feelings of others. By using nonviolent communication, individuals can improve their relationships, resolve conflicts in a peaceful manner, and promote mutual respect and understanding.</p>
+<p>The mainstream definition of empathy typically refers to the ability to understand and share the feelings of another person. This often involves putting oneself in the other person’s shoes and experiencing their emotions as if they were one’s own. While this is a valuable aspect of empathy, the nonviolent communication context adds several important dimensions to this understanding.</p>
+<p>In the context of nonviolent communication, empathy is not just about understanding the other person’s feelings, but also their needs and values that underlie those feelings. The emphasis is on deep listening and understanding the other person’s perspective without judgment or evaluation. This involves paying attention to the language and tone used by the other person, as well as their nonverbal cues.</p>
+<p>Nonviolent communication also recognizes that empathy is a two-way process. It is not just about understanding the other person’s perspective, but also being willing to express oneself in a vulnerable and authentic way. This means being willing to share one’s own feelings, needs, and values in a way that is honest and respectful.</p>
+<p>Overall, the nonviolent communication context sees empathy as a key component of creating understanding and connection between people. It goes beyond just understanding the other person’s emotions to also include their needs and values, and emphasizes the importance of open and honest communication.</p>
+<p>Self-empathy is an important aspect of nonviolent communication (NVC) and involves turning empathy inward, toward oneself. It involves the ability to understand and connect with our own feelings, needs, and experiences, with the same compassion and non-judgmental awareness that we would offer to someone else.</p>
+<p>Self-empathy is a way of taking care of oneself emotionally, and can help us to identify and address our own needs before they become overwhelming. In NVC, self-empathy is seen as a necessary first step before engaging in communication with others. When we are able to understand and empathize with our own feelings and needs, we are better equipped to communicate those needs to others in a clear and respectful way.</p>
+<p>But this is easier said than done. I’ve been wanting to build a tool that simply sets the process into motion.</p>
+<p>I’ve chosen to use complaint words or “initial feeling” words as the starting point. The basic assumption here is that when people are in a triggered state and could benefit from some self-empathy, they are often ruminating on a complaint (“They’re being…) or a feeling (“I’m feeling…).</p>
+<p>One thing I’m doing differently here is that I’m separating out what I call the “initial feelings” from the “underlying feelings.” In the NVC framework, these initial feelings are called “victim verbs” — feeling words that imply blame, judgment, or a lack of personal responsibility. These are typically the feeling words that end in ‘-ed’. In NVC, it is recommended to avoid using victim verbs. My take is that it can be productive to recognize them, name them, and then shift into identifying the underlying feelings. They are a great starting point.</p>
+<p>So instead of trying to avoid victim verbs or judgement/complaint words, we use these as the starting points for the self empathy process.</p>
+<p>The app guides users from:
+complaint —> initial feelings —> underlying feelings —> needs</p>
+<p>or</p>
+<p>initial feeling —> underlying feelings —> needs</p>
+<p>I’ve created a large JSON object with my best guesses at six initial feelings connected to each complaint word. And then six underlying feelings and six need words associated with the starting complaint.</p>
+<p>This site starts to get interesting when we hook up this front end to a database that can record user input. No identifying information. Just simply register an upvote for the terms that actually seem to “land” for the user when they are practicing self-empathy. Over time, this data can be used to improve the suggested terms. So while I might think the complaint “arrogant” could be highly associated with the needs “inclusion” and “resonance,” these might not be very good guesses. By registering which words actually work for users, the app can evolve over time to offer helpful empathy guesses and not just the terms that I thought sounded good.</p>
+<p>This is important. I’ve found that a lot of people working in the leadership / coaching / development space tend to have their own agendas, frameworks, and wording that they want to push on their clients. All of my empathy guesses start to have a particular flavor. I’m guessing that you are yearning for “aliveness” and “meaning” all the time. Not because you are, necessarily, but because I am. Or because I’ve found that those terms really seem to land for me a lot of the time.</p>
+<p>So I’ve initialized the app with a set of guesses under each term. But I’ve configured it in such a way that it can evolve beyond my initial best guesses and in a direction that is less “authored” and more generally useful.</p>
+<p>None of this is particularly visible to the user. It will just happen in the back end over time as more and more people utilize the site. But there is no need to create an account; no user information is stored. Just a generic “upvote” for a particular value.</p>
+<p>It was interesting to notice how much aversion I had while building this out to the notion that particular user data would be drawn out of the app. I can understand how if this is utilized on a big enough scale it could be interesting to see the data on a more granular level by particular demographics. But, I’m really trying not to be too creepy here. And going down that route seems like a pointless empathy guess optimization process. In this particular case, guessing the perfect words is a lot less important than guiding a user experience that actually compels someone to engage in a self-empathy process when they are feeling triggered.</p>
+<p>Give it a try! Grab my email address and let me know what you think.</p>
+<p><a href="https://selfempathy.app/">selfempathy site</a></p>
+<p><a href="https://github.com/josephrmartinez/selfempathyapp">github repo</a></p>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>
