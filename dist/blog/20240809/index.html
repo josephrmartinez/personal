@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <!-- Global Metadata --><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="generator" content="Astro v2.0.5">
+
+<!-- Primary Meta Tags -->
+<title>Running Evals on New Models</title>
+<meta name="title" content="Running Evals on New Models">
+<meta name="description" content="Evaluating the Performance of the New gpt-4o-mini-2024-07-18 and gpt-4o-2024-08-06 Models from OpenAI">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://josephm.dev/blog/20240809/">
+<meta property="og:title" content="Running Evals on New Models">
+<meta property="og:description" content="Evaluating the Performance of the New gpt-4o-mini-2024-07-18 and gpt-4o-2024-08-06 Models from OpenAI">
+<meta property="og:image" content="https://josephm.dev/social_img.webp">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://josephm.dev/blog/20240809/">
+<meta property="twitter:title" content="Running Evals on New Models">
+<meta property="twitter:description" content="Evaluating the Performance of the New gpt-4o-mini-2024-07-18 and gpt-4o-2024-08-06 Models from OpenAI">
+<meta property="twitter:image" content="https://josephm.dev/social_img.webp">
+  <link rel="stylesheet" href="/_astro/_...page_.63dc1c2b.css" />
+<link rel="stylesheet" href="/_astro/_slug_.a53bdabe.css" /></head>
+  <body>
+    <div class="bg-base-100 drawer drawer-mobile">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle">
+      <div class="drawer-content flex flex-col bg-base-100">
+        <div class="sticky lg:hidden top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar">
+    <div class="navbar-start">
+      <label for="my-drawer" class="btn btn-square btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </label>
+    </div>
+    <div class="navbar-center">
+      <a class="btn btn-ghost normal-case text-xl" href="/">🙋‍♂️</a>
+    </div>
+    <div class="navbar-end"></div>
+  </div>
+</div>
+        <div class="md:flex md:justify-left">
+          <main class="p-6 pt-10 w-full max-w-[900px]">
+            <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      
+      <h1 class="my-2 text-3xl font-semibold">Running Evals on New Models</h1>
+      <time>Aug 9, 2024</time>
+      
+      <div class="divider my-2"></div>
+      <h3 id="evaluating-large-language-models"><strong>Evaluating Large Language Models</strong></h3>
+<p>For companies integrating large language models (LLMs) into their applications, a systematic approach to model and prompt evaluation is essential. This ensures that they are choosing models optimized for their specific use cases.</p>
+<p>A Colab or Jupyter Notebook is a straightforward tool that can be used for generating prediction datasets and conducting thorough evaluations (evals). As new LLMs are released, these notebooks also importantly offer the flexibility to immediately update the prediction datasets and perform evals that cover the new models.</p>
+<p>I created a comprehensive notebook to generate predictions and evaluate the performance of various LLMs for a medical charting app.</p>
+<p>The GENERATE PREDICTIONS section of this notebook outlines the process for generating a dataset of predictions from various models under consideration for use in a medical charting application. This section can be easily updated and rerun as new models are released. The PREDICTION ANALYSIS section contains analysis across several criteria important for this specific use case.</p>
+<p>This blog post contains just the text and graphical outputs from the prediction analysis sections. You can view the full notebook here.</p>
+<h3 id="assessing-new-models-from-openai-gpt-4o-mini-2024-07-18-and-gpt-4o-2024-08-06"><strong>Assessing New Models from OpenAI: gpt-4o-mini-2024-07-18 and gpt-4o-2024-08-06</strong></h3>
+<p>Before this analysis, I had been using gpt-4o-mini in production with completely satisfactory results. With the release of two new models from OpenAI, I updated the first section of this notebook and reran the evaluations to determine what kinds of improvements, if any, were offered by these models. These systematic evals provided clarity on the following:</p>
+<ul>
+<li>The performance difference between gpt-4o-mini and gpt-4o-mini-2024-07-18.</li>
+<li>The performance difference between gpt-4o and gpt-4o-2024-08-06.</li>
+<li>Whether it would be beneficial to switch from gpt-4o-mini to gpt-4o-mini-2024-07-18 or gpt-4o-2024-08-06.</li>
+</ul>
+<h3 id="specific-use-case-medical-charting-application"><strong>Specific Use Case: Medical Charting Application</strong></h3>
+<p><a href="https://github.com/josephrmartinez/soapnotescribe"><strong>soapnotescribe</strong></a> is a web application that utilizes AI to automatically generate structured clinical notes from medical appointment recordings.</p>
+<p>The application workflow involves first sending the audio of the medical appointment to a speech-to-text model hosted by Replicate. The transcribed text is then processed by a large language model (served by OpenAI or Anthropic) to organize the content into a structured data object, which is subsequently presented to the physician as a SOAP note.</p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/application_diagram.png" alt="png"></p>
+<p>While all major foundational models can generate acceptable SOAP notes from audio transcriptions, they differ significantly in completion times, costs, and quality. Simple pass/fail evaluations are not sufficient to grasp the performance differences of different models under consideration.</p>
+<p>The objective of this notebook is to systematically evaluate the performance of models available to convert audio transcriptions into structured SOAP notes and determine whether the application should be updated with one of the newly released models from OpenAI.</p>
+<p>Goals:</p>
+<ul>
+<li><strong>Evaluate Performance for Specific Use Case</strong>: Analyze and measure the performance of different models on key variables.</li>
+<li><strong>Model Selection</strong>: Choose the optimal model based on a comprehensive evaluation of performance, cost, and suitability for this specific use case.</li>
+<li><strong>Preparedness for New Models</strong>: Develop a framework for immediate analysis and evaluation when new models are released, enabling a clear understanding of the costs and benefits of switching models.</li>
+</ul>
+<h3 id="prediction-evaluations"><strong>Prediction Evaluations</strong></h3>
+<p><strong>Model currently used in production:</strong> gpt-4o-mini</p>
+<p><strong>Models previously evaluated:</strong></p>
+<ul>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>claude-3-haiku-20240307</li>
+<li>claude-3-5-sonnet-20240620</li>
+</ul>
+<p><strong>New models evaluated:</strong></p>
+<ul>
+<li>gpt-4o-mini-2024-07-18</li>
+<li>gpt-4o-2024-08-06</li>
+</ul>
+<p>This notebook makes it simple to perform some standard evaluations on each model:</p>
+<ul>
+<li>Cost</li>
+<li>Speed (Response Time)</li>
+<li>Prediction Length (output tokens)</li>
+</ul>
+<p>We can also set up some evaluations that are specific to this particular use case:</p>
+<ul>
+<li>Length of differential diagnosis field.</li>
+<li>Inclusion of alternative treatment plan in differential diagnosis.</li>
+<li>Correction of medication spelling errors from transcript.</li>
+<li>Correction of medication formatting errors from transcript.</li>
+</ul>
+<h3 id="analysis-prediction-time"><strong>Analysis: Prediction Time</strong></h3>
+<p>How long does it take for each model to return a response? Note that for some applications the variability of response times may be an important consideration. Some models are much more consistent in their response times than others.</p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_36_0.png" alt="png"></p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_37_0.png" alt="png"></p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">gpt-4o-mini-2024-07-18 avg prediction time: 9.72 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini avg prediction time: 7.61 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: 2.11 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: 27.72%</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-2024-08-06 avg prediction time: 5.62 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o avg prediction time: 6.38 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -0.77 seconds</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -12.01%</span></span></code></pre>
+<h4 id="conclusions-prediction-time"><strong>Conclusions: Prediction Time</strong></h4>
+<ul>
+<li>
+<p>gpt-4o-mini-2024-07-18 predictions take about 2.1 seconds (28%) longer on average than gpt-4o-mini predictions</p>
+</li>
+<li>
+<p>gpt-4o-2024-08-06 predictions take about 0.77 seconds (12%) less time on average than gpt-4o predictions.</p>
+</li>
+<li>
+<p>Prediction time is not the most important criteria for this use-case, but getting predictions in under ten seconds is desirable. For this reason, switching from gpt-4o-mini to gpt-4o-mini-2024-07-18 does not look advatageous.</p>
+</li>
+</ul>
+<p><strong>Top Models for Prediction Speed and Consistency:</strong></p>
+<ol>
+<li>claude-3-haiku (reliably under 5 seconds)</li>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4o-2024-08-06</li>
+</ol>
+<h3 id="analysis-prediction-cost"><strong>Analysis: Prediction Cost</strong></h3>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_43_0.png" alt="png"></p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_44_0.png" alt="png"></p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">gpt-4o-2024-08-06 avg prediction cost: $0.00688</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o avg prediction cost: $0.01337</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -0.00648</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -48.51%</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini-2024-07-18 avg prediction cost: $0.00042</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini avg prediction cost: $0.00052</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -0.00011</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -20.37%</span></span></code></pre>
+<h4 id="conclusions-prediction-cost"><strong>Conclusions: Prediction Cost</strong></h4>
+<ul>
+<li>gpt-4o-2024-08-06 has a 48.5% lower average prediction cost compared to gpt-4o.</li>
+<li>gpt-4o-mini-2024-07-18 has a 20.4% lower average prediction cost compared to gpt-4o-mini.</li>
+<li>gpt-4o-mini-2024-07-18 is now the least expensive model.</li>
+</ul>
+<p>Models with lowest cost:</p>
+<ol>
+<li>gpt-4o-mini-2024-07-18</li>
+<li>gpt-4o-mini</li>
+</ol>
+<h3 id="analysis-output-tokens"><strong>Analysis: Output Tokens</strong></h3>
+<p>Which models are more or less verbose?</p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_50_0.png" alt="png"></p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_51_0.png" alt="png"></p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">gpt-4o-2024-08-06 avg output tokens: 351.40 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o avg output tokens: 436.90 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -85.50 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -19.57%</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini-2024-07-18 avg output tokens: 356.30 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini avg output tokens: 529.90 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -173.60 tokens</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -32.76%</span></span></code></pre>
+<h4 id="conclusions-output-tokens"><strong>Conclusions: Output Tokens</strong></h4>
+<ul>
+<li>The new models from OpenAI appear to be less verbose than their counterpart models.
+<ul>
+<li>gpt-4o-2024-08-06 returns about 20% less tokens than gpt-4o</li>
+<li>gpt-4o-mini-2024-07-18 returns about 33% less tokens than gpt-4o-mini</li>
+</ul>
+</li>
+<li>This less verbose behavior may not be advantageous. Brevity is not nessesarily preferred for this use case.</li>
+<li>Anthropic’s Claude models generally produce more verbose outputs compared to OpenAI’s GPT models.
+<ul>
+<li>claude-3-5-sonnet is an outlier in output token length.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Models with output token preference:</strong></p>
+<ul>
+<li>Not applicable. Longer/shorter is not necessarily better.</li>
+</ul>
+<h3 id="analysis-differential-diagnosis"><strong>Analysis: Differential Diagnosis</strong></h3>
+<ul>
+<li>Was a Differential Diagnosis returned? If so, what was the average length?</li>
+<li>How many Differential Diagnosis values included “alternative treatments” as requested in the system prompt?</li>
+</ul>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_57_0.png" alt="png"></p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_58_0.png" alt="png"></p>
+<pre is:raw="" class="astro-code" style="background-color: #0d1117; overflow-x: auto;"><code><span class="line"><span style="color: #c9d1d9">gpt-4o-2024-08-06 avg length of differential diagnosis: 228.00 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o avg length of differential diagnosis: 225.60 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: 2.40 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: 1.06%</span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9"></span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini-2024-07-18 avg length of differential diagnosis: 151.10 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">gpt-4o-mini avg length of differential diagnosis: 370.30 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">Absolute difference: -219.20 chars</span></span>
+<span class="line"><span style="color: #c9d1d9">Relative difference: -59.20%</span></span></code></pre>
+<h4 id="conclusions-differential-diagnosis"><strong>Conclusions: Differential Diagnosis</strong></h4>
+<p>The claude-3-5-sonnet model is an outlier with Differential Diagnosis outputs that are 3 to 5 times longer than those of other models. Manual review indicates that these longer outputs are of high quality and significantly enrich the SOAP notes.</p>
+<p><strong>gpt-4o-2024-08-06</strong></p>
+<ul>
+<li>gpt-4o-2024-08-06 returns a differrential about the same length as gpt-4o</li>
+<li>gpt-4o-2024-08-06 returns an alternative treatment plan 100% of the time; compared to gpt-4o which only returned an alternative treatment plan 50% of the time.</li>
+</ul>
+<p><strong>gpt-4o-mini-2024-07-18</strong></p>
+<ul>
+<li>gpt-4o-mini-2024-07-18 returns a differrential about half the length as gpt-4o-mini</li>
+<li>This less verbose behavior may not be advantageous. Brevity is not nessesarily preferred for this use case.</li>
+<li>gpt-4o-mini-2024-07-18 returns an alternative treatment plan 50% of the time; compared to gpt-4o-mini which returned an alternative treatment plan 80% of the time.</li>
+</ul>
+<p><strong>Best Models for Differential Diagnosis:</strong></p>
+<ul>
+<li>Claude-3.5-Sonnet: Consistently provides a detailed Differential Diagnosis along with alternative treatment options, as requested. Notably produces longer, more comprehensive responses.</li>
+<li>gpt-3.5-turbo: Reliably returns a Differential Diagnosis with alternative treatment options.</li>
+<li>gpt-4o-2024-08-06: Reliably returns a Differential Diagnosis with alternative treatment options.</li>
+</ul>
+<h3 id="analysis-fixing-transcription-errors"><strong>Analysis: Fixing Transcription Errors</strong></h3>
+<p>The transcript includes the text “Vicodin 5-3, 25 milligrams” for when the speaker said “Vicodin five slash three twenty-five milligrams.” This should have been transcribed as “Vicodin 5/325 milligrams.”</p>
+<p>The dosage of medications is typically written with a slash (”/”) to clearly separate the amounts of each ingredient. “5” represents the amount of hydrocodone (usually in milligrams), and “325” represents the amount of acetaminophen (also in milligrams).
+“Vicodin 5/325” means each tablet contains 5 mg of hydrocodone and 325 mg of acetaminophen.</p>
+<p>The transcript also includes a spelling error related to a medication name: “flexor all 20 milligram tablets” should be “Flexeril 20 milligram tablets”.</p>
+<p>While this was not specifically requested in the prompt, some of the models caught these mistakes in the transcript and automatically fixed them in the response.</p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_64_0.png" alt="png"></p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_65_0.png" alt="png"></p>
+<h4 id="conclusions-fixing-transcription-errors"><strong>Conclusions: Fixing Transcription Errors</strong></h4>
+<ul>
+<li>All models reliably fix the medication formatting error in the transcript.</li>
+<li>Except for claude-3-5-sonnet and gpt-3.5-turbo, all models are catching the spelling errors 100% of the time.</li>
+<li>Manual inspection of claude-3-5-sonnet and gpt-3.5-turbo predictions that did not catch spelling errors reveals unexpected behavior:
+<ul>
+<li>On the one occasion when claude-3-5-sonnet failed to correct the spelling of “flexor all” for “Flexeril,” the model actually made the correction to “Cyclobenzaprine,” which is the generic name for Flexeril.</li>
+<li>On the five occasions when GPT-3.5-turbo failed to correct the spelling of “flexor all,” the model actually omitted the medication from the note entirely. This error is far more concerning.</li>
+</ul>
+</li>
+</ul>
+<h3 id="model-comparisons"><strong>Model Comparisons</strong></h3>
+<h4 id="gpt-4o-mini-2024-07-18-compared-to-gpt-4o-mini"><strong>gpt-4o-mini-2024-07-18 compared to gpt-4o-mini</strong></h4>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_70_0.png" alt="png"></p>
+<p><strong>Output Tokens:</strong>
+Less verbose (33% less output tokens)</p>
+<p><strong>Cost:</strong>
+Better (20% cost reduction simply due to output reduction)</p>
+<p><strong>Prediction times:</strong>
+Worse (2.11 seconds longer / 27.7% longer avg time)</p>
+<p><strong>Fix Transcription Spelling Errors:</strong>
+Equal</p>
+<p><strong>Fix Transcription Formatting Errors:</strong>
+Equal</p>
+<p><strong>Include Alternative Treatment Plan with Differential:</strong>
+Worse (50% success rate compared to 80%)</p>
+<p><strong>Length of Differential Diagnosis:</strong>
+Less verbose (59% shorter)</p>
+<p><strong>Conclusion:</strong></p>
+<ul>
+<li>gpt-4o-mini-2024-07-18 is worse than gpt-4o-mini for this use case</li>
+</ul>
+<h4 id="gpt-4o-2024-08-06-compared-to-gpt-4o"><strong>gpt-4o-2024-08-06 compared to gpt-4o</strong></h4>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_73_0.png" alt="png"></p>
+<p><strong>Output Tokens:</strong>
+Less verbose (20% less output tokens)</p>
+<p><strong>Cost:</strong>
+Better (49% cost reduction due to price cut and output reduction)</p>
+<p><strong>Prediction times:</strong>
+Better (0.77 seconds shorter / 12% shorter avg time)</p>
+<p><strong>Fix Transcription Spelling Errors:</strong>
+Equal</p>
+<p><strong>Fix Transcription Formatting Errors:</strong>
+Equal</p>
+<p><strong>Include Alternative Treatment Plan with Differential:</strong>
+Better (100% success rate compared to 50%)</p>
+<p><strong>Length of Differential Diagnosis:</strong>
+Equal</p>
+<p><strong>Conclusion:</strong></p>
+<ul>
+<li>gpt-4o-2024-08-06 is better than gpt-4o for this use case</li>
+</ul>
+<h3 id="overall-model-rankings-by-criteria"><strong>Overall Model Rankings by Criteria</strong></h3>
+<p><strong>Lowest cost:</strong></p>
+<ol>
+<li>gpt-4o-mini</li>
+<li>claude-3-haiku</li>
+<li>gpt-3.5-turbo</li>
+</ol>
+<p><strong>Inclusion of Alternative Treatment with Differential Diagnosis:</strong></p>
+<ol>
+<li>claude-3.5-sonnet (long, very thorough)</li>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4o-2024-08-06</li>
+</ol>
+<ul>
+<li>No other models scored 100%</li>
+</ul>
+<p><strong>Fixing transcription errors:</strong></p>
+<ul>
+<li>All models 100% except claude-3.5-sonnet and gpt-3.5-turbo</li>
+</ul>
+<p><strong>Quick, consistent prediction times:</strong></p>
+<ol>
+<li>claude-3-haiku (reliably under 5 seconds)</li>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4o-2024-08-06</li>
+</ol>
+<h4 id="takeaways"><strong>Takeaways</strong>:</h4>
+<ul>
+<li>gpt-4o-2024-08-06 is generally an improvement over gpt-4o. Perform more detailed analysis on output token reduction and what information might be dropped due to less verbose behavior.</li>
+<li>gpt-4o-mini-2024-07-18 is not a significant improvement over gpt-4o-mini for this use case.</li>
+<li><strong>Consider Switching Model to gpt-4o-2024-08-06:</strong>
+<ul>
+<li>100% reliability for including alternative treatment plan</li>
+<li>Fast faster time</li>
+<li>More expensive model, but cost difference has reduced</li>
+</ul>
+</li>
+</ul>
+<h3 id="determine-implications-of-switching-from-gpt-4o-2024-08-06-to-gpt-4o-mini"><strong>Determine Implications of Switching From gpt-4o-2024-08-06 to gpt-4o-mini</strong></h3>
+<p>Compare model now under consideration (gpt-4o-2024-08-06) to model currently used in production (gpt-4o-mini) to understand implications of switching models.</p>
+<p><img src="/blogimages/model_evals_2024_08_09_files/model_evals_2024_08_09_78_0.png" alt="png"></p>
+<p><strong>Implications of switching from gpt-4o-2024-08-06 to gpt-4o-mini:</strong></p>
+<p><strong>Cost:</strong>
+Worse (12 x the cost of gpt-4o-mini)</p>
+<p><strong>Output Tokens:</strong>
+Less verbose (34% less output tokens)</p>
+<p><strong>Prediction times:</strong>
+Better (2 seconds shorter / 26% shorter avg time)</p>
+<p><strong>Fix Transcription Spelling Errors:</strong>
+Equal</p>
+<p><strong>Fix Transcription Formatting Errors:</strong>
+Equal</p>
+<p><strong>Include Alternative Treatment Plan with Differential:</strong>
+Better (100% success rate compared to 80%)</p>
+<p><strong>Length of Differential Diagnosis:</strong>
+Less verbose (38% shorter)</p>
+<p><strong>Conclusion:</strong></p>
+<ul>
+<li>If getting 100% inclusion of alternative treatment plans in the differential diagnosis and quicker response times would make a significant improvement for users of this application, gpt-4o-2024-08-06 could be a better model than gpt-4o-mini for this use case. However, changing the model may not be the only way to achieve this goal. It may be possible to get an alternative treatment included in the differential simply by updating the prompt.
+<ul>
+<li>Test separating alternative treatment plan into a separate required field on the JSON Schema to force a 100% successful inclusion rate for gpt-4o-mini.</li>
+</ul>
+</li>
+<li>Note that switching over to gpt-4o-2024-08-06 from gpt-4o-mini will have a 12x increase on prediction costs.</li>
+</ul>
+<p><strong>Recommendations:</strong></p>
+<ul>
+<li>Perform detailed review on differential diagnosis results from gpt-4o-2024-08-06 and gpt-4o-mini to understand what information, if any, is being left out in less verbose responses.</li>
+</ul>
+    </article>
+  </main>
+          </main>
+        </div>
+      </div>
+      <div class="drawer-side bg-base-200">
+  <label for="my-drawer" class="drawer-overlay bg-base-200"></label>
+  <div class="menu flex flex-col flex-nowrap p-4 overflow-y-auto w-[21rem] bg-base-200 text-base-content">
+    <div class="w-fit">
+      <a href="/">
+        <div class="avatar transition ease-in-out w-1/2 hover:scale-[102%] block m-auto mt-3 mb-6">
+          <div class="bg-base-200" style="width: 152px; height:152px;">
+            <img class="mask mask-circle" src="/profile.webp" alt="profile image">
+          </div>
+        </div>
+      </a>
+    </div>
+    <ul class="grow shrink">
+      <!-- Sidebar content here -->
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="mailto:joseph.r.martinez@gmail.com">Contact</a></li>
+    </ul>
+    <div class="social-icons px-4 my-2 flex self-center items-center">
+      <a href="https://github.com/josephrmartinez" target="_blank" class="mx-3" aria-label="Github" title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;" class="hover:text-orange-600 transition duration-200 ease-in-out"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/joseph-martinez-08174811/" target="_blank" class="mx-3" aria-label="Linkedin" title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="hover:text-orange-600 transition duration-200 ease-in-out" style="fill: currentColor;transform: ;msFilter:;"><circle cx="4.983" cy="5.009" r="2.188"></circle><path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCMImPk4uRUQISaOLl5tB3yA" target="_blank" class="mx-3" aria-label="YouTube" title="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-youtub inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 16 16">
+          <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path>
+        </svg>
+      </a>
+
+      <a href="https://medium.com/@joseph.r.martinez" target="_blank" class="mx-3" aria-label="Medium" title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="inline-block hover:text-orange-600 transition duration-200 ease-in-out" viewBox="0 0 256 256"><path d="M136,128A64,64,0,1,1,72,64,64.07,64.07,0,0,1,136,128Zm48-64c-5.68,0-16.4,2.76-24.32,21.25C154.73,96.8,152,112,152,128s2.73,31.2,7.68,42.75C167.6,189.24,178.32,192,184,192s16.4-2.76,24.32-21.25C213.27,159.2,216,144,216,128s-2.73-31.2-7.68-42.75C200.4,66.76,189.68,64,184,64Zm56,0a8,8,0,0,0-8,8V184a8,8,0,0,0,16,0V72A8,8,0,0,0,240,64Z"></path></svg>
+      </a>
+      <a href="/rss.xml" target="_blank" class="mx-3" aria-label="RSS Feed" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;transform: ;msFilter:;"><path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"></path><path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"></path><circle cx="6" cy="18" r="2"></circle>
+        </svg>
+    </a>
+    </div>
+  </div>
+</div>
+    </div>
+  </body></html>
